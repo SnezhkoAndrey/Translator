@@ -12,7 +12,7 @@ export async function getTranslate(
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'X-RapidAPI-Key': '0a295b6132mshddc486d8cf61a8cp18ab3bjsnd3f2a29db442',
+        'X-RapidAPI-Key': process.env.REACT_APP_API as string,
         'X-RapidAPI-Host': 'translate-language.p.rapidapi.com',
       },
       body: `{"text":"${value}"}`,
@@ -27,7 +27,7 @@ export async function getDetectedLanguage(value: string): Promise<DetectedText> 
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'X-RapidAPI-Key': '0a295b6132mshddc486d8cf61a8cp18ab3bjsnd3f2a29db442',
+      'X-RapidAPI-Key': process.env.REACT_APP_API as string,
       'X-RapidAPI-Host': 'translate-language.p.rapidapi.com',
     },
     body: `{"text":"${value}"}`,
@@ -41,11 +41,10 @@ export async function getSupportedLanguages(): Promise<SupportedLanguage> {
     method: 'GET',
     url: 'https://translate-language.p.rapidapi.com/supported-languages',
     headers: {
-      'X-RapidAPI-Key': '0a295b6132mshddc486d8cf61a8cp18ab3bjsnd3f2a29db442',
+      'X-RapidAPI-Key': process.env.REACT_APP_API,
       'X-RapidAPI-Host': 'translate-language.p.rapidapi.com',
     },
   }
   const response = await axios.request(options)
-
   return response.data as SupportedLanguage
 }
