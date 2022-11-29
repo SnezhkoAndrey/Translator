@@ -47,7 +47,7 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
       const translate = await getTranslate(value, fromLanguage, toLanguage)
       setTranslatedText(translate.data.text)
       if (translate.message !== 'Successful') {
-        setError(translate.message)
+        throw new Error('Required')
       }
     } catch (err: unknown) {
       setError(err)
@@ -58,7 +58,7 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
       const detect = await getDetectedLanguage(value)
       setFromLanguage(detect.data.language)
       if (detect.message !== 'Successful') {
-        setError(detect.message)
+        throw new Error('Not detect language')
       }
     } catch (err: unknown) {
       setError(err)
@@ -69,7 +69,7 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
       const languages = await getSupportedLanguages()
       setSupportedLanguage(languages.data)
       if (languages.message !== 'Successful') {
-        setError(languages.message)
+        throw new Error('Not found languages')
       }
     } catch (err: unknown) {
       setError(err)

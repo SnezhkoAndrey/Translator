@@ -1,3 +1,1 @@
-import ToLanguageTextarea from './ToLanguageTextarea'
-
-export default ToLanguageTextarea
+export { default } from './ToLanguageTextarea'

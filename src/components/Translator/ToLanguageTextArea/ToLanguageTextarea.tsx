@@ -7,18 +7,15 @@ const ToLanguageTextarea: React.FC = () => {
   const { translatedText } = useContext(GlobalContext)
 
   return (
-    <>
-      <Box sx={{ margin: '20px 0 0 0' }}>
-        <TextField
-          sx={{ width: { xs: '300px', sm: '400px', md: '400px' } }}
-          id='outlined-multiline-static'
-          label={translatedText ? '' : 'Translated text'}
-          multiline
-          rows={4}
-          value={translatedText}
-        />
-      </Box>
-    </>
+    <Box sx={{ mt: '20px' }}>
+      <TextField
+        sx={{ width: { xs: 300, sm: 400, md: 400 } }}
+        label={translatedText ? '' : 'Translated text'}
+        multiline
+        rows={4}
+        value={translatedText}
+      />
+    </Box>
   )
 }
 

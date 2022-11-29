@@ -1,15 +1,23 @@
 import React, { useContext, useEffect } from 'react'
 import { GlobalContext } from '../../context/GlobalContext'
-import FromLanguageSelector from './FromLanguageSelector/FromLanguageSelector'
+import LanguageSelector from './LanguageSelector/LanguageSelector'
 import FromLanguageTextarea from './FromLanguageTextArea/FromLanguageTextarea'
-import ToLanguageSelector from './ToLanguageSelector/ToLanguageSelector'
-import ToLanguageTextarea from './ToLanguageTextArea/ToLanguageTextarea'
 import ButtonBox from './Button'
 import toast, { Toaster } from 'react-hot-toast'
 import { Box, Stack } from '@mui/material'
 
 const Translator: React.FC = () => {
-  const { getSupportedLanguagesContext, error } = useContext(GlobalContext)
+  const {
+    getSupportedLanguagesContext,
+    error,
+    fromLanguage,
+    changeFromLanguage,
+    changeValue,
+    value,
+    changeToLanguage,
+    toLanguage,
+    translatedText,
+  } = useContext(GlobalContext)
 
   useEffect(() => {
     getSupportedLanguagesContext()
@@ -35,19 +43,20 @@ const Translator: React.FC = () => {
       spacing={{ xs: 1, sm: 2, md: 4 }}
       justifyContent='center'
       alignItems={{ xs: 'center', sm: 'center', md: 'start' }}
-      margin={{ xs: '20px 0 0 0', sm: '20px 0 0 0', md: '50px 0 0 0' }}
+      sx={{ mt: { xs: '20px', sm: '20px', md: '50px' } }}
     >
       <Toaster />
       <Box>
-        <FromLanguageSelector />
+        <LanguageSelector
+          selectedLanguage={fromLanguage}
+          changeLanguageFunction={changeFromLanguage}
+        />
         <FromLanguageTextarea />
       </Box>
+      <ButtonBox />
       <Box>
-        <ButtonBox />
-      </Box>
-      <Box>
-        <ToLanguageSelector />
-        <ToLanguageTextarea />
+        <LanguageSelector changeLanguageFunction={changeToLanguage} selectedLanguage={toLanguage} />
+        <FromLanguageTextarea />
       </Box>
     </Stack>
   )

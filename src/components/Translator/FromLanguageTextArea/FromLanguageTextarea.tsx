@@ -10,19 +10,16 @@ const FromLanguageTextarea: React.FC = () => {
     changeValue(event.target.value)
   }
   return (
-    <>
-      <Box sx={{ margin: '20px 0 0 0' }}>
-        <TextField
-          sx={{ width: { xs: '300px', sm: '400px', md: '400px' } }}
-          id='outlined-multiline-static'
-          label='Your text'
-          multiline
-          rows={4}
-          value={value}
-          onChange={handleChangeText}
-        />
-      </Box>
-    </>
+    <Box sx={{ margin: '20px 0 0 0' }}>
+      <TextField
+        sx={{ width: { xs: 300, sm: 400, md: 400 } }}
+        label='Your text'
+        multiline
+        rows={4}
+        value={value}
+        onChange={handleChangeText}
+      />
+    </Box>
   )
 }
 

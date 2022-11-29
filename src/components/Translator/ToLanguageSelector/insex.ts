@@ -1,3 +1,1 @@
-import ToLanguageSelector from './ToLanguageSelector'
-
-export default ToLanguageSelector
+export { default } from './ToLanguageSelector'

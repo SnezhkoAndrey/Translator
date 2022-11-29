@@ -1,3 +1,1 @@
-import ButtonBox from './Button'
-
-export default ButtonBox
+export { default } from './Button'
