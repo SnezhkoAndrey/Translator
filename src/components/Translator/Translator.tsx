@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { GlobalContext } from '../../context/GlobalContext'
 import LanguageSelector from './LanguageSelector/LanguageSelector'
-import FromLanguageTextarea from './FromLanguageTextArea/FromLanguageTextarea'
+import LanguageTextarea from './LanguageTextArea/LanguageTextarea'
 import ButtonBox from './Button'
 import toast, { Toaster } from 'react-hot-toast'
 import { Box, Stack } from '@mui/material'
@@ -51,12 +51,12 @@ const Translator: React.FC = () => {
           selectedLanguage={fromLanguage}
           changeLanguageFunction={changeFromLanguage}
         />
-        <FromLanguageTextarea />
+        <LanguageTextarea value={value} changeValue={changeValue} label={'Your text'} />
       </Box>
       <ButtonBox />
       <Box>
         <LanguageSelector changeLanguageFunction={changeToLanguage} selectedLanguage={toLanguage} />
-        <FromLanguageTextarea />
+        <LanguageTextarea value={translatedText} label={translatedText ? '' : 'Translated text'} />
       </Box>
     </Stack>
   )
