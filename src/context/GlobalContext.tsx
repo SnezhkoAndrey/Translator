@@ -7,7 +7,7 @@ export const GlobalContext = createContext({
   supportedLanguage: [] as LanguageCode[],
   fromLanguage: '',
   toLanguage: '',
-  error: '' as unknown,
+  error: '',
   translate: (value: string, fromLanguage: string, toLanguage: string) => {
     // change contex data
   },
@@ -28,7 +28,7 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
   const [supportedLanguage, setSupportedLanguage] = useState([] as LanguageCode[])
   const [fromLanguage, setFromLanguage] = useState('')
   const [toLanguage, setToLanguage] = useState('')
-  const [error, setError] = useState('' as unknown)
+  const [error, setError] = useState('')
 
   const getTranslateContext = async (
     value: string,
@@ -42,7 +42,7 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
       }
       setTranslatedText(translate.data.text)
     } catch (err: unknown) {
-      setError(err)
+      setError(err as string)
     }
   }
   const getDetectedLanguageContext = async (value: string): Promise<string | undefined> => {
@@ -54,7 +54,7 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
       setFromLanguage(detect.data.language)
       return detect.data.language
     } catch (err: unknown) {
-      setError(err)
+      setError(err as string)
     }
   }
   const getSupportedLanguagesContext = async (): Promise<void> => {
@@ -65,7 +65,7 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
       }
       setSupportedLanguage(languages.data)
     } catch (err: unknown) {
-      setError(err)
+      setError(err as string)
     }
   }
   const translate = async (
@@ -73,11 +73,19 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
     fromLanguage: string,
     toLanguage: string,
   ): Promise<void> => {
-    if (!fromLanguage) {
-      const res = await getDetectedLanguageContext(value)
-      await getTranslateContext(value, res ?? '', toLanguage)
-    } else {
-      await getTranslateContext(value, fromLanguage, toLanguage)
+    try {
+      if (!value && !toLanguage) {
+        throw new Error('You have required field')
+      } else {
+        if (!fromLanguage) {
+          const res = await getDetectedLanguageContext(value)
+          await getTranslateContext(value, res ?? '', toLanguage)
+        } else {
+          await getTranslateContext(value, fromLanguage, toLanguage)
+        }
+      }
+    } catch (err: unknown) {
+      setError(err as string)
     }
   }
 
