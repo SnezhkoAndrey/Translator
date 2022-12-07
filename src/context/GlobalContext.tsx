@@ -7,22 +7,15 @@ export const GlobalContext = createContext({
   supportedLanguage: [] as LanguageCode[],
   fromLanguage: '',
   toLanguage: '',
-  value: '',
   error: '' as unknown,
-  translate: () => {
+  translate: (value: string, fromLanguage: string, toLanguage: string) => {
     // change contex data
   },
   getSupportedLanguagesContext: () => {
     // change contex data
   },
-  changeToLanguage: (value: string) => {
-    // change toLanguage
-  },
-  changeFromLanguage: (value: string) => {
-    // change fromLanguage
-  },
-  changeValue: (value: string) => {
-    // change fromLanguage
+  changeLanguageContext: (fromLanguage: string, toLanguage: string) => {
+    // change context data
   },
 })
 
@@ -35,7 +28,6 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
   const [supportedLanguage, setSupportedLanguage] = useState([] as LanguageCode[])
   const [fromLanguage, setFromLanguage] = useState('')
   const [toLanguage, setToLanguage] = useState('')
-  const [value, setValue] = useState('')
   const [error, setError] = useState('' as unknown)
 
   const getTranslateContext = async (
@@ -45,21 +37,22 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
   ): Promise<void> => {
     try {
       const translate = await getTranslate(value, fromLanguage, toLanguage)
-      setTranslatedText(translate.data.text)
       if (translate.message !== 'Successful') {
         throw new Error('Required')
       }
+      setTranslatedText(translate.data.text)
     } catch (err: unknown) {
       setError(err)
     }
   }
-  const getDetectedLanguageContext = async (value: string): Promise<void> => {
+  const getDetectedLanguageContext = async (value: string): Promise<string | undefined> => {
     try {
       const detect = await getDetectedLanguage(value)
-      setFromLanguage(detect.data.language)
       if (detect.message !== 'Successful') {
         throw new Error('Not detect language')
       }
+      setFromLanguage(detect.data.language)
+      return detect.data.language
     } catch (err: unknown) {
       setError(err)
     }
@@ -67,29 +60,30 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
   const getSupportedLanguagesContext = async (): Promise<void> => {
     try {
       const languages = await getSupportedLanguages()
-      setSupportedLanguage(languages.data)
       if (languages.message !== 'Successful') {
         throw new Error('Not found languages')
       }
+      setSupportedLanguage(languages.data)
     } catch (err: unknown) {
       setError(err)
     }
   }
-  const translate = async (): Promise<void> => {
+  const translate = async (
+    value: string,
+    fromLanguage: string,
+    toLanguage: string,
+  ): Promise<void> => {
     if (!fromLanguage) {
-      await getDetectedLanguageContext(value)
+      const res = await getDetectedLanguageContext(value)
+      await getTranslateContext(value, res ?? '', toLanguage)
+    } else {
+      await getTranslateContext(value, fromLanguage, toLanguage)
     }
-    await getTranslateContext(value, fromLanguage, toLanguage)
   }
 
-  const changeFromLanguage = (value: string): void => {
-    setFromLanguage(value)
-  }
-  const changeToLanguage = (value: string): void => {
-    setToLanguage(value)
-  }
-  const changeValue = (value: string): void => {
-    setValue(value)
+  const changeLanguageContext = (fromLanguage: string, toLanguage: string): void => {
+    setFromLanguage(fromLanguage)
+    setToLanguage(toLanguage)
   }
 
   const providerValue = {
@@ -97,12 +91,9 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
     supportedLanguage,
     translate,
     getSupportedLanguagesContext,
+    changeLanguageContext,
     fromLanguage,
     toLanguage,
-    changeFromLanguage,
-    changeToLanguage,
-    value,
-    changeValue,
     error,
   }
   return <GlobalContext.Provider value={providerValue}> {children} </GlobalContext.Provider>

@@ -1,26 +1,26 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
-import { GlobalContext } from '../../../context/GlobalContext'
 
-const ButtonBox: React.FC = () => {
-  const { translate } = useContext(GlobalContext)
+interface PropsType {
+  onSubmit: () => void
+}
 
-  const handleClickTranslate = (e: React.SyntheticEvent): void => {
-    e.preventDefault()
-    translate()
-  }
-
+const ButtonSubmit: React.FC<PropsType> = ({ onSubmit }) => {
   const handleKeyPress: React.KeyboardEventHandler<HTMLButtonElement> = (e) => {
     if (e.key === 'Enter') {
-      handleClickTranslate(e)
+      console.log('here')
+
+      onSubmit()
     }
   }
   return (
     <Box>
       <Button
         sx={{ margin: { xs: '10px 0', sm: 0, md: 0 } }}
-        onClick={handleClickTranslate}
+        onClick={() => {
+          onSubmit()
+        }}
         onKeyDown={handleKeyPress}
         variant='contained'
       >
@@ -30,4 +30,4 @@ const ButtonBox: React.FC = () => {
   )
 }
 
-export default ButtonBox
+export default ButtonSubmit

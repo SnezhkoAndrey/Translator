@@ -30,3 +30,10 @@ export interface SupportedLanguage {
   status: boolean
   totalResultCount: number
 }
+
+export interface submitType {
+  selectedFromLanguage: string
+  fromLanguageTextarea: string
+  selectedToLanguage: string
+  ToLanguageTextarea: string
+}

@@ -7,7 +7,7 @@ import Container from '@mui/material/Container'
 const App: React.FC = () => {
   return (
     <GlobalContextProvider>
-      <Container maxWidth='sm'>
+      <Container maxWidth='lg'>
         <Translator />
       </Container>
     </GlobalContextProvider>
