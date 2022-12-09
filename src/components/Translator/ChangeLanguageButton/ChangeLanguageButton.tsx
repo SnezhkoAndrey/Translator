@@ -1,25 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Button from '@mui/material/Button'
 import SyncAltIcon from '@mui/icons-material/SyncAlt'
 
 interface PropsType {
   swapLanguages: () => void
-  fromLanguage: string
-  toLanguage: string
+  disabled: boolean
 }
 
-const ButtonChangeLanguage: React.FC<PropsType> = ({ swapLanguages, fromLanguage, toLanguage }) => {
+const ChangeLanguageButton: React.FC<PropsType> = ({ swapLanguages, disabled }) => {
   const handleChangeLanguage = (): void => {
     swapLanguages()
   }
-
-  const [disabled, setDisabled] = useState(true)
-
-  useEffect(() => {
-    if (!!fromLanguage || !!toLanguage) {
-      setDisabled(false)
-    }
-  }, [fromLanguage, toLanguage])
 
   return (
     <Button
@@ -34,4 +25,4 @@ const ButtonChangeLanguage: React.FC<PropsType> = ({ swapLanguages, fromLanguage
   )
 }
 
-export default ButtonChangeLanguage
+export default ChangeLanguageButton

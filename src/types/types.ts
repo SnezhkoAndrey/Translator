@@ -37,3 +37,9 @@ export interface submitType {
   selectedToLanguage: string
   ToLanguageTextarea: string
 }
+
+export type nameType =
+  | 'selectedFromLanguage'
+  | 'fromLanguageTextarea'
+  | 'selectedToLanguage'
+  | 'ToLanguageTextarea'

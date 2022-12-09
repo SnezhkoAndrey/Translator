@@ -8,6 +8,8 @@ export const GlobalContext = createContext({
   fromLanguage: '',
   toLanguage: '',
   error: '',
+  loading: false,
+  loadingSupportedLanguage: false,
   translate: (value: string, fromLanguage: string, toLanguage: string) => {
     // change contex data
   },
@@ -29,6 +31,8 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
   const [fromLanguage, setFromLanguage] = useState('')
   const [toLanguage, setToLanguage] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [loadingSupportedLanguage, setLoadingSupportesLanguage] = useState(false)
 
   const getTranslateContext = async (
     value: string,
@@ -38,14 +42,16 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
     try {
       const translate = await getTranslate(value, fromLanguage, toLanguage)
       if (translate.message !== 'Successful') {
-        throw new Error('Required')
+        throw new Error('Invalid text')
       }
       setTranslatedText(translate.data.text)
-    } catch (err: unknown) {
-      setError(err as string)
+    } catch (err: any) {
+      // eslint-disable-next-line
+      setError(err.message)
     }
   }
   const getDetectedLanguageContext = async (value: string): Promise<string | undefined> => {
+    setLoading(true)
     try {
       const detect = await getDetectedLanguage(value)
       if (detect.message !== 'Successful') {
@@ -53,26 +59,32 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
       }
       setFromLanguage(detect.data.language)
       return detect.data.language
-    } catch (err: unknown) {
-      setError(err as string)
+    } catch (err: any) {
+      // eslint-disable-next-line
+      setError(err.message)
     }
+    setLoading(false)
   }
   const getSupportedLanguagesContext = async (): Promise<void> => {
+    setLoadingSupportesLanguage(true)
     try {
       const languages = await getSupportedLanguages()
       if (languages.message !== 'Successful') {
         throw new Error('Not found languages')
       }
       setSupportedLanguage(languages.data)
-    } catch (err: unknown) {
-      setError(err as string)
+    } catch (err: any) {
+      // eslint-disable-next-line
+      setError(err.message)
     }
+    setLoadingSupportesLanguage(false)
   }
   const translate = async (
     value: string,
     fromLanguage: string,
     toLanguage: string,
   ): Promise<void> => {
+    setLoading(true)
     try {
       if (!value && !toLanguage) {
         throw new Error('You have required field')
@@ -84,9 +96,11 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
           await getTranslateContext(value, fromLanguage, toLanguage)
         }
       }
-    } catch (err: unknown) {
-      setError(err as string)
+    } catch (err: any) {
+      // eslint-disable-next-line
+      setError(err.message)
     }
+    setLoading(false)
   }
 
   const changeLanguageContext = (fromLanguage: string, toLanguage: string): void => {
@@ -103,6 +117,8 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
     fromLanguage,
     toLanguage,
     error,
+    loading,
+    loadingSupportedLanguage,
   }
   return <GlobalContext.Provider value={providerValue}> {children} </GlobalContext.Provider>
 }

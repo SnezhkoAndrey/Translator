@@ -1,33 +1,30 @@
 import React from 'react'
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 import Box from '@mui/material/Box'
 
 interface PropsType {
   onSubmit: () => void
+  loading: boolean
 }
 
-const ButtonSubmit: React.FC<PropsType> = ({ onSubmit }) => {
+const SubmitButton: React.FC<PropsType> = ({ onSubmit, loading }) => {
   const handleKeyPress: React.KeyboardEventHandler<HTMLButtonElement> = (e) => {
     if (e.key === 'Enter') {
-      console.log('here')
-
       onSubmit()
     }
   }
   return (
     <Box>
-      <Button
-        sx={{ margin: { xs: '10px 0', sm: 0, md: 0 } }}
-        onClick={() => {
-          onSubmit()
-        }}
+      <LoadingButton
+        onClick={onSubmit}
         onKeyDown={handleKeyPress}
         variant='contained'
+        loading={loading}
       >
         Translate
-      </Button>
+      </LoadingButton>
     </Box>
   )
 }
 
-export default ButtonSubmit
+export default SubmitButton

@@ -1,19 +1,15 @@
 import React from 'react'
 import TextField from '@mui/material/TextField'
 import { Controller, Control } from 'react-hook-form'
-import { submitType } from '../../../types/types'
+import { nameType, submitType } from '../../../types/types'
 
 interface PropsType {
   label: string
-  name:
-    | 'selectedFromLanguage'
-    | 'fromLanguageTextarea'
-    | 'selectedToLanguage'
-    | 'ToLanguageTextarea'
+  name: nameType
   control: Control<submitType>
 }
 
-const TextareaFild: React.FC<PropsType> = ({ control, label, name }) => {
+const TextareaField: React.FC<PropsType> = ({ control, label, name }) => {
   return (
     <Controller
       name={name}
@@ -32,4 +28,4 @@ const TextareaFild: React.FC<PropsType> = ({ control, label, name }) => {
   )
 }
 
-export default TextareaFild
+export default TextareaField

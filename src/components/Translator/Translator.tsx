@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { GlobalContext } from '../../context/GlobalContext'
-import ButtonSubmit from './ButtonSubmit'
+import SubmitButton from './SubmitButton'
 import { Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import SelectorFild from './SelectorFild/SelectorFild'
-import TextareaFild from './TextareaFild/TextareaFild'
+import SelectorField from './SelectorField/SelectorField'
+import TextareaField from './TextareaField/TextareaField'
 import { submitType } from '../../types/types'
-import ButtonChangeLanguage from './ButtonChangeLanguage'
+import ChangeLanguageButton from './ChangeLanguageButton'
+import toast from 'react-hot-toast'
 
 const Translator: React.FC = () => {
   const {
@@ -16,18 +17,19 @@ const Translator: React.FC = () => {
     translate,
     toLanguage,
     changeLanguageContext,
+    error,
+    loading,
+    loadingSupportedLanguage,
   } = useContext(GlobalContext)
 
   useEffect(() => {
-    // getSupportedLanguagesContext()
+    getSupportedLanguagesContext()
   }, [])
 
-  console.log('hey')
-
-  const { control, handleSubmit, setValue } = useForm<submitType>({
+  const { control, handleSubmit, setValue, reset } = useForm<submitType>({
     defaultValues: {
-      selectedFromLanguage: fromLanguage,
-      selectedToLanguage: toLanguage,
+      selectedFromLanguage: '',
+      selectedToLanguage: '',
     },
   })
 
@@ -44,17 +46,26 @@ const Translator: React.FC = () => {
     if (fromLanguage) setValue('selectedFromLanguage', fromLanguage)
   }, [fromLanguage])
 
-  const [changedLanguages, setChangedLanguages] = useState(false)
-
   const swapLanguages = (): void => {
-    setChangedLanguages(!changedLanguages)
+    reset((formValues) => ({
+      ...formValues,
+      selectedFromLanguage: toLanguage,
+      selectedToLanguage: fromLanguage,
+    }))
+    changeLanguageContext(toLanguage, fromLanguage)
   }
 
   useEffect(() => {
-    setValue('selectedFromLanguage', toLanguage)
-    setValue('selectedToLanguage', fromLanguage)
-    changeLanguageContext(toLanguage, fromLanguage)
-  }, [changedLanguages])
+    if (error) {
+      toast.error(error, {
+        style: {
+          background: '#fff',
+          color: '#333',
+          boxShadow: '0.1px 0.1px 3px 1px red',
+        },
+      })
+    }
+  }, [error])
 
   return (
     <form>
@@ -66,23 +77,32 @@ const Translator: React.FC = () => {
         sx={{ mt: { xs: '20px', sm: '20px', md: '50px' }, width: '100%' }}
       >
         <Stack spacing={2.5} sx={{ width: { xs: '80%', sm: '60%', md: '40%' } }}>
-          <SelectorFild label={'Languages'} name={'selectedFromLanguage'} control={control} />
+          <SelectorField
+            label={'Languages'}
+            name={'selectedFromLanguage'}
+            control={control}
+            loading={loadingSupportedLanguage}
+          />
 
-          <TextareaFild name={'fromLanguageTextarea'} label={'Your text'} control={control} />
+          <TextareaField name={'fromLanguageTextarea'} label={'Your text'} control={control} />
         </Stack>
         <Stack spacing={0.7} direction={'column'} alignItems='center'>
-          <ButtonSubmit onSubmit={handleSubmit(onSubmit) as () => void} />
+          <SubmitButton onSubmit={handleSubmit(onSubmit) as () => void} loading={loading} />
 
-          <ButtonChangeLanguage
+          <ChangeLanguageButton
             swapLanguages={swapLanguages}
-            fromLanguage={fromLanguage}
-            toLanguage={toLanguage}
+            disabled={!fromLanguage || !toLanguage}
           />
         </Stack>
         <Stack spacing={2.5} sx={{ width: { xs: '80%', sm: '60%', md: '40%' } }}>
-          <SelectorFild label={'Languages'} name={'selectedToLanguage'} control={control} />
+          <SelectorField
+            label={'Languages'}
+            name={'selectedToLanguage'}
+            control={control}
+            loading={loadingSupportedLanguage}
+          />
 
-          <TextareaFild
+          <TextareaField
             name={'ToLanguageTextarea'}
             label={translatedText ? '' : 'Translated text'}
             control={control}

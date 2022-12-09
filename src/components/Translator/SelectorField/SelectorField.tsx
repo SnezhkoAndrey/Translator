@@ -6,19 +6,16 @@ import Select from '@mui/material/Select'
 import { MenuItem } from '@mui/material'
 import { GlobalContext } from '../../../context/GlobalContext'
 import { Controller, Control } from 'react-hook-form'
-import { submitType } from '../../../types/types'
+import { nameType, submitType } from '../../../types/types'
 
 interface PropsType {
   label: string
-  name:
-    | 'selectedFromLanguage'
-    | 'fromLanguageTextarea'
-    | 'selectedToLanguage'
-    | 'ToLanguageTextarea'
+  name: nameType
   control: Control<submitType>
+  loading: boolean
 }
 
-const SelectorFild: React.FC<PropsType> = ({ label, name, control }) => {
+const SelectorField: React.FC<PropsType> = ({ label, name, control, loading }) => {
   const { supportedLanguage } = useContext(GlobalContext)
 
   return (
@@ -29,7 +26,7 @@ const SelectorFild: React.FC<PropsType> = ({ label, name, control }) => {
         return (
           <Box sx={{ width: 200, margin: '0 auto' }}>
             <FormControl fullWidth>
-              <InputLabel>Languages</InputLabel>
+              <InputLabel>{loading ? 'Loading...' : 'Languages'}</InputLabel>
               <Select value={value} label={label} onChange={onChange}>
                 {supportedLanguage.map((language) => (
                   <MenuItem key={language.code} value={language.language}>
@@ -45,4 +42,4 @@ const SelectorFild: React.FC<PropsType> = ({ label, name, control }) => {
   )
 }
 
-export default SelectorFild
+export default SelectorField
