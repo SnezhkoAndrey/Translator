@@ -24,7 +24,7 @@ const Translator: React.FC = () => {
   const { loadingTranslate, loadingSupportedLanguage } = loading
 
   useEffect(() => {
-    // getSupportedLanguagesContext()
+    getSupportedLanguagesContext()
   }, [])
 
   const { control, handleSubmit, setValue, reset } = useForm<submitType>({
