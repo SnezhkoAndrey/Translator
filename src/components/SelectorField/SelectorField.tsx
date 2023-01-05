@@ -4,9 +4,9 @@ import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import { MenuItem } from '@mui/material'
-import { GlobalContext } from '../../../context/GlobalContext'
 import { Controller, Control } from 'react-hook-form'
-import { nameType, submitType } from '../../../types/types'
+import { nameType, submitType } from '../../types/types'
+import { GlobalContext } from '../../context/GlobalContext'
 
 interface PropsType {
   label: string
@@ -16,7 +16,9 @@ interface PropsType {
 }
 
 const SelectorField: React.FC<PropsType> = ({ label, name, control, loading }) => {
-  const { supportedLanguage } = useContext(GlobalContext)
+  const { translator } = useContext(GlobalContext)
+
+  const { supportedLanguage } = translator
 
   return (
     <Controller

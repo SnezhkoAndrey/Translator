@@ -43,3 +43,11 @@ export type nameType =
   | 'fromLanguageTextarea'
   | 'selectedToLanguage'
   | 'ToLanguageTextarea'
+
+export type TranslatorApiType = {
+  postTranslateDetectRequest: (
+    value: string,
+    route: string,
+  ) => Promise<TranslateText | DetectedText>
+  getSupportedLanguages: () => Promise<SupportedLanguage>
+}
