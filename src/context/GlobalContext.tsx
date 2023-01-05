@@ -2,19 +2,23 @@ import React, { createContext, useState } from 'react'
 import { useTranslatorApi } from '../api/api'
 import { DetectedText, LanguageCode, TranslateText } from '../types/types'
 
+const translatorProccess = {
+  translatedText: '',
+  valueText: '',
+  supportedLanguage: [] as LanguageCode[],
+  fromLanguage: '',
+  toLanguage: '',
+}
+
+const loadingProccess = {
+  loadingTranslate: false,
+  loadingSupportedLanguage: false,
+}
+
 export const GlobalContext = createContext({
-  translator: {
-    translatedText: '',
-    valueText: '',
-    supportedLanguage: [] as LanguageCode[],
-    fromLanguage: '',
-    toLanguage: '',
-  },
+  translator: translatorProccess,
   error: '',
-  loading: {
-    loadingTranslate: false,
-    loadingSupportedLanguage: false,
-  },
+  loading: loadingProccess,
   translate: (value: string, fromLanguage: string, toLanguage: string) => {
     // change contex data
   },
@@ -38,20 +42,11 @@ interface Props {
 export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
   const { postTranslateDetectRequest, getSupportedLanguages } = useTranslatorApi()
 
-  const [translator, setTranslator] = useState({
-    translatedText: '',
-    valueText: '',
-    supportedLanguage: [] as LanguageCode[],
-    fromLanguage: '',
-    toLanguage: '',
-  })
+  const [translator, setTranslator] = useState(translatorProccess)
 
   const [error, setError] = useState('')
 
-  const [loading, setLoading] = useState({
-    loadingTranslate: false,
-    loadingSupportedLanguage: false,
-  })
+  const [loading, setLoading] = useState(loadingProccess)
 
   const getTranslateContext = async (
     value: string,

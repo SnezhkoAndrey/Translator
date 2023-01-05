@@ -34,13 +34,18 @@ const Translator: React.FC = () => {
     },
   })
 
-  const onSubmit = (data: submitType): void => {
-    translate(data.fromLanguageTextarea, data.selectedFromLanguage, data.selectedToLanguage)
+  const onSubmit = ({
+    selectedFromLanguage,
+    selectedToLanguage,
+    fromLanguageTextarea,
+    ToLanguageTextarea,
+  }: submitType): void => {
+    translate(fromLanguageTextarea, selectedFromLanguage, selectedToLanguage)
     changeLanguageContext(
-      data.selectedFromLanguage,
-      data.selectedToLanguage,
-      data.fromLanguageTextarea,
-      data.ToLanguageTextarea,
+      selectedFromLanguage,
+      selectedToLanguage,
+      fromLanguageTextarea,
+      ToLanguageTextarea,
     )
   }
 
