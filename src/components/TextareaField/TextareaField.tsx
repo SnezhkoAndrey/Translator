@@ -1,15 +1,16 @@
 import React from 'react'
 import TextField from '@mui/material/TextField'
 import { Controller, Control } from 'react-hook-form'
-import { nameType, submitType } from '../../../types/types'
+import { nameType, submitType } from '../../types/types'
 
 interface PropsType {
   label: string
   name: nameType
   control: Control<submitType>
+  disabled?: boolean
 }
 
-const TextareaField: React.FC<PropsType> = ({ control, label, name }) => {
+const TextareaField: React.FC<PropsType> = ({ control, label, name, disabled }) => {
   return (
     <Controller
       name={name}
@@ -21,6 +22,7 @@ const TextareaField: React.FC<PropsType> = ({ control, label, name }) => {
           rows={4}
           value={value}
           onChange={onChange}
+          inputProps={{ readOnly: disabled }}
           sx={{ width: '100%' }}
         />
       )}

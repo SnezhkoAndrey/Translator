@@ -1,26 +1,27 @@
 import React, { useContext, useEffect } from 'react'
 import { GlobalContext } from '../../context/GlobalContext'
-import SubmitButton from './SubmitButton'
+import SubmitButton from '../../components/SubmitButton'
 import { Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import SelectorField from './SelectorField/SelectorField'
-import TextareaField from './TextareaField/TextareaField'
+import SelectorField from '../../components/SelectorField'
+import TextareaField from '../../components/TextareaField'
 import { submitType } from '../../types/types'
-import ChangeLanguageButton from './ChangeLanguageButton'
+import ChangeLanguageButton from '../../components/ChangeLanguageButton'
 import toast from 'react-hot-toast'
+import { styledError } from '../../style/StyledToaster'
 
 const Translator: React.FC = () => {
   const {
     getSupportedLanguagesContext,
-    fromLanguage,
-    translatedText,
+    translator,
     translate,
-    toLanguage,
     changeLanguageContext,
     error,
     loading,
-    loadingSupportedLanguage,
   } = useContext(GlobalContext)
+
+  const { fromLanguage, translatedText, valueText, toLanguage } = translator
+  const { loadingTranslate, loadingSupportedLanguage } = loading
 
   useEffect(() => {
     getSupportedLanguagesContext()
@@ -33,9 +34,19 @@ const Translator: React.FC = () => {
     },
   })
 
-  const onSubmit = (data: submitType): void => {
-    translate(data.fromLanguageTextarea, data.selectedFromLanguage, data.selectedToLanguage)
-    changeLanguageContext(data.selectedFromLanguage, data.selectedToLanguage)
+  const onSubmit = ({
+    selectedFromLanguage,
+    selectedToLanguage,
+    fromLanguageTextarea,
+    ToLanguageTextarea,
+  }: submitType): void => {
+    translate(fromLanguageTextarea, selectedFromLanguage, selectedToLanguage)
+    changeLanguageContext(
+      selectedFromLanguage,
+      selectedToLanguage,
+      fromLanguageTextarea,
+      ToLanguageTextarea,
+    )
   }
 
   useEffect(() => {
@@ -51,19 +62,15 @@ const Translator: React.FC = () => {
       ...formValues,
       selectedFromLanguage: toLanguage,
       selectedToLanguage: fromLanguage,
+      fromLanguageTextarea: translatedText,
+      ToLanguageTextarea: valueText,
     }))
-    changeLanguageContext(toLanguage, fromLanguage)
+    changeLanguageContext(toLanguage, fromLanguage, translatedText, valueText)
   }
 
   useEffect(() => {
     if (error) {
-      toast.error(error, {
-        style: {
-          background: '#fff',
-          color: '#333',
-          boxShadow: '0.1px 0.1px 3px 1px red',
-        },
-      })
+      toast.error(error, styledError)
     }
   }, [error])
 
@@ -87,7 +94,10 @@ const Translator: React.FC = () => {
           <TextareaField name={'fromLanguageTextarea'} label={'Your text'} control={control} />
         </Stack>
         <Stack spacing={0.7} direction={'column'} alignItems='center'>
-          <SubmitButton onSubmit={handleSubmit(onSubmit) as () => void} loading={loading} />
+          <SubmitButton
+            onSubmit={handleSubmit(onSubmit) as () => void}
+            loading={loadingTranslate}
+          />
 
           <ChangeLanguageButton
             swapLanguages={swapLanguages}
@@ -106,6 +116,7 @@ const Translator: React.FC = () => {
             name={'ToLanguageTextarea'}
             label={translatedText ? '' : 'Translated text'}
             control={control}
+            disabled={true}
           />
         </Stack>
       </Stack>
