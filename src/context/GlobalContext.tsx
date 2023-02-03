@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react'
-import { useTranslatorApi } from '../api/api'
+import HTTPClient from '../api/api'
 import { DetectedText, LanguageCode, TranslateText } from '../types/types'
 
 const translatorProccess = {
@@ -40,7 +40,7 @@ interface Props {
 }
 
 export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
-  const { postTranslateDetectRequest, getSupportedLanguages } = useTranslatorApi()
+  const { POST, GET } = HTTPClient()
 
   const [translator, setTranslator] = useState(translatorProccess)
 
@@ -54,9 +54,9 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
     toLanguage: string,
   ): Promise<void> => {
     try {
-      const translate = (await postTranslateDetectRequest(
-        value,
+      const translate = (await POST(
         `translate?to_language=${toLanguage}&from_language=${fromLanguage}`,
+        value,
       )) as TranslateText
       if (translate.message !== 'Successful') {
         throw new Error('Invalid text or language to translate is not specified')
@@ -71,7 +71,7 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
   const getDetectedLanguageContext = async (value: string): Promise<string | undefined> => {
     setLoading((prevState) => ({ ...prevState, loadingTranslate: true }))
     try {
-      const detect = (await postTranslateDetectRequest(value, 'detect-language')) as DetectedText
+      const detect = (await POST('detect-language', value)) as DetectedText
       if (detect.message !== 'Successful') {
         throw new Error('Not detect language')
       }
@@ -87,7 +87,7 @@ export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
   const getSupportedLanguagesContext = async (): Promise<void> => {
     setLoading((prevState) => ({ ...prevState, loadingSupportedLanguage: true }))
     try {
-      const languages = await getSupportedLanguages()
+      const languages = await GET('supported-languages')
       if (languages.message !== 'Successful') {
         throw new Error('Not found languages')
       }

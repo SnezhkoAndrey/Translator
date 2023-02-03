@@ -51,3 +51,8 @@ export type TranslatorApiType = {
   ) => Promise<TranslateText | DetectedText>
   getSupportedLanguages: () => Promise<SupportedLanguage>
 }
+
+export type HTTPClientType = {
+  POST: (endpoint: string, value: string) => Promise<TranslateText | DetectedText>
+  GET: (endpoint: string) => Promise<SupportedLanguage>
+}

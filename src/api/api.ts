@@ -1,36 +1,41 @@
-import axios from 'axios'
-import { DetectedText, SupportedLanguage, TranslateText, TranslatorApiType } from '../types/types'
+import { DetectedText, HTTPClientType, SupportedLanguage, TranslateText } from '../types/types'
 
-export const useTranslatorApi = (): TranslatorApiType => {
-  async function postTranslateDetectRequest(
-    value: string,
-    route: string,
-  ): Promise<TranslateText | DetectedText> {
-    const response = await fetch(`https://translate-language.p.rapidapi.com/${route}`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'X-RapidAPI-Key': process.env.REACT_APP_API as string,
-        'X-RapidAPI-Host': 'translate-language.p.rapidapi.com',
-      },
-      body: `{"text":"${value}"}`,
+const HTTPClient = (): HTTPClientType => {
+  const baseURL = process.env.REACT_APP_URL as string
+  const headers = {
+    'content-type': 'application/json',
+    'X-RapidAPI-Key': process.env.REACT_APP_API as string,
+    'X-RapidAPI-Host': 'translate-language.p.rapidapi.com',
+  }
+
+  async function fetchJSON(
+    endpoint: string,
+    options = {},
+  ): Promise<TranslateText | DetectedText | SupportedLanguage> {
+    const response = await fetch(baseURL + endpoint, {
+      ...options,
+      headers,
     })
-    const data = (await response.json()) as TranslateText | DetectedText
+
+    const data = (await response.json()) as TranslateText | DetectedText | SupportedLanguage
+
     return data
   }
 
-  async function getSupportedLanguages(): Promise<SupportedLanguage> {
-    const options = {
-      method: 'GET',
-      url: 'https://translate-language.p.rapidapi.com/supported-languages',
-      headers: {
-        'X-RapidAPI-Key': process.env.REACT_APP_API,
-        'X-RapidAPI-Host': 'translate-language.p.rapidapi.com',
-      },
-    }
-    const response = await axios.request(options)
-    return response.data as SupportedLanguage
+  const POST = async (endpoint: string, value: string): Promise<any> => {
+    return await fetchJSON(endpoint, {
+      method: 'POST',
+      body: `{"text":"${value}"}`,
+    })
   }
 
-  return { postTranslateDetectRequest, getSupportedLanguages }
+  const GET = async (endpoint: string): Promise<any> => {
+    return await fetchJSON(endpoint, {
+      method: 'GET',
+    })
+  }
+
+  return { POST, GET }
 }
+
+export default HTTPClient
