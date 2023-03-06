@@ -19,6 +19,7 @@ const ChangeLanguageButton: React.FC<PropsType> = ({ swapLanguages, disabled }) 
       variant='outlined'
       sx={{ width: 12.5 }}
       disabled={disabled}
+      data-testid={'changeLanguageButton'}
     >
       <SyncAltIcon />
     </Button>

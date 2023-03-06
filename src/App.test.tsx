@@ -1,9 +1,16 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import React from 'react'
+import { render, screen } from '@testing-library/react'
+import App from './App'
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+describe('App component test', () => {
+  test('renders textarea label link', () => {
+    render(<App />)
+    const input = screen.getByLabelText(/your text/i)
+    expect(input).toBeInTheDocument()
+  })
+  test('renders textarea label link', () => {
+    render(<App />)
+    const input = screen.getByLabelText(/translated text/i)
+    expect(input).toBeInTheDocument()
+  })
+})

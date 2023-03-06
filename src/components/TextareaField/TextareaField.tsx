@@ -21,6 +21,7 @@ const TextareaField: React.FC<PropsType> = ({ control, label, name, disabled }) 
           multiline
           rows={4}
           value={value}
+          data-testid={'textareaField'}
           onChange={onChange}
           inputProps={{ readOnly: disabled }}
           sx={{ width: '100%' }}
