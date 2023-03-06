@@ -13,9 +13,10 @@ interface PropsType {
   name: nameType
   control: Control<submitType>
   loading: boolean
+  testid: string
 }
 
-const SelectorField: React.FC<PropsType> = ({ label, name, control, loading }) => {
+const SelectorField: React.FC<PropsType> = ({ label, name, control, loading, testid }) => {
   const { translator } = useContext(GlobalContext)
 
   const { supportedLanguage } = translator
@@ -29,7 +30,7 @@ const SelectorField: React.FC<PropsType> = ({ label, name, control, loading }) =
           <Box sx={{ width: 200, margin: '0 auto' }}>
             <FormControl fullWidth>
               <InputLabel>{loading ? 'Loading...' : 'Languages'}</InputLabel>
-              <Select value={value} label={label} onChange={onChange}>
+              <Select value={value} label={label} onChange={onChange} data-testid={testid}>
                 {supportedLanguage.map((language) => (
                   <MenuItem key={language.code} value={language.language}>
                     {language.language}

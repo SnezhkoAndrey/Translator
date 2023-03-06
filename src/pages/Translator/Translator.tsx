@@ -89,6 +89,7 @@ const Translator: React.FC = () => {
             name={'selectedFromLanguage'}
             control={control}
             loading={loadingSupportedLanguage}
+            testid={'selectedFromLanguage'}
           />
 
           <TextareaField name={'fromLanguageTextarea'} label={'Your text'} control={control} />
@@ -110,6 +111,7 @@ const Translator: React.FC = () => {
             name={'selectedToLanguage'}
             control={control}
             loading={loadingSupportedLanguage}
+            testid={'selectedToLanguage'}
           />
 
           <TextareaField

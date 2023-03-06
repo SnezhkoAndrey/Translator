@@ -20,6 +20,7 @@ const SubmitButton: React.FC<PropsType> = ({ onSubmit, loading }) => {
         onKeyDown={handleKeyPress}
         variant='contained'
         loading={loading}
+        data-testid='submitButton'
       >
         Translate
       </LoadingButton>
